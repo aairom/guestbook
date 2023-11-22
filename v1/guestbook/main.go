@@ -24,6 +24,8 @@ import (
 
 	"github.com/codegangsta/negroni"
 	"github.com/gorilla/mux"
+	instana "github.com/instana/go-sensor"
+	"github.com/sirupsen/logrus"
 	"github.com/xyproto/simpleredis"
 )
 
@@ -172,6 +174,19 @@ func findRedisURL() string {
 }
 
 func main() {
+
+	// initialize Instana sensor
+	instana.InitSensor(&instana.Options{Service: SERVICE})
+
+	// initialize and configure the logger
+	logger := logrus.New()
+	logger.Level = logrus.InfoLevel
+
+	// check if INSTANA_DEBUG is set and set the log level to DEBUG if needed
+	if _, ok := os.LookupEnv("INSTANA_DEBUG"); ok {
+		logger.Level = logrus.DebugLevel
+	}
+
 	// When using Redis, setup our DB connections
 	url := findRedisURL()
 	if url != "" {
@@ -191,4 +206,7 @@ func main() {
 	n := negroni.Classic()
 	n.UseHandler(r)
 	n.Run(":3000")
+
+	// use logrus to log the Instana Go Collector messages
+	instana.SetLogger(logger)
 }
