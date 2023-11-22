@@ -26,7 +26,7 @@ import (
 	"github.com/gorilla/mux"
 	instana "github.com/instana/go-sensor"
 	"github.com/sirupsen/logrus"
-	"github.com/xyproto/simpleredis"
+	"github.com/xyproto/simpleredis/v2"
 )
 
 var (

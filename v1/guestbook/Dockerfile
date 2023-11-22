@@ -1,6 +1,8 @@
 FROM golang as builder
 RUN go install github.com/codegangsta/negroni
 RUN go install github.com/gorilla/mux github.com/xyproto/simpleredis
+RUN go install github.com/sirupsen/logrus
+RUN go install github.com/xyproto/simpleredis/v2
 COPY main.go .
 RUN go build main.go
 
